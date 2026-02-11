@@ -2,6 +2,8 @@
 
 AI-Native MRR Dashboard: Stripe → BigQuery → React
 
+**[🔗 Live Demo](https://javvad.dev/stripe_mmr)**
+
 ## Overview
 
 This project demonstrates a complete data pipeline for calculating and visualizing Monthly Recurring Revenue (MRR) from Stripe subscription data.
