@@ -87,7 +87,7 @@ python3 scripts/generate_stripe_test_data.py
 **What it does:**
 - Creates test customers with varying subscription statuses (Active, Canceled, Past Due)
 - Uses Stripe Test Clocks to simulate 6 months of invoice history
-- Generates realistic SaaS subscription data ($19-$199/month tiers)
+- Generates realistic SaaS subscription data ($19-$49/month tiers)
 
 ### 4. Load Data to BigQuery
 
