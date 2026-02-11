@@ -1,0 +1,4 @@
+stripe==8.11.0
+google-cloud-bigquery==3.23.1
+python-dotenv==1.0.1
+pandas==2.2.2
