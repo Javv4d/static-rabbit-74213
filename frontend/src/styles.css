@@ -1,40 +1,100 @@
 :root {
-  font-family: "Inter", system-ui, sans-serif;
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
   color: #0f172a;
   background: #f8fafc;
 }
 
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
+  padding: 0;
 }
 
 .page {
-  max-width: 960px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 32px 20px 48px;
+  padding: 48px 24px;
 }
 
 .header {
-  margin-bottom: 24px;
+  margin-bottom: 32px;
 }
 
 .header h1 {
-  margin: 0 0 6px;
-  font-size: 32px;
+  margin: 0 0 8px;
+  font-size: 36px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.header p {
+  margin: 0;
+  font-size: 16px;
+  color: #64748b;
+  font-weight: 500;
 }
 
 .card {
   background: #ffffff;
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08),
+              0 4px 12px rgba(15, 23, 42, 0.04);
+  border: 1px solid #e2e8f0;
 }
 
 .error {
   color: #dc2626;
   font-weight: 600;
+  padding: 16px;
+  background: #fee2e2;
+  border-radius: 8px;
+  border: 1px solid #fecaca;
 }
 
 .empty {
   color: #64748b;
+  text-align: center;
+  padding: 48px 24px;
+  font-size: 16px;
+}
+
+.chart {
+  margin-top: 16px;
+}
+
+/* Chart styling improvements */
+.recharts-cartesian-grid-horizontal line,
+.recharts-cartesian-grid-vertical line {
+  stroke: #e2e8f0;
+}
+
+.recharts-text {
+  fill: #64748b;
+  font-size: 12px;
+}
+
+.recharts-tooltip-wrapper {
+  outline: none;
+}
+
+.recharts-default-tooltip {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.1) !important;
+}
+
+.recharts-tooltip-label {
+  color: #0f172a !important;
+  font-weight: 600 !important;
+  margin-bottom: 4px !important;
+}
+
+.recharts-tooltip-item {
+  color: #2563eb !important;
+  font-weight: 500 !important;
 }
