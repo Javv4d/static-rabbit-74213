@@ -28,19 +28,6 @@ def load_subscription_events(input_path):
 
 def calculate_monthly_mrr(events):
     """Calculate MRR for each month"""
-    # Group events by customer and date
-    customer_state = {}
-    monthly_mrr = defaultdict(lambda: {
-        'total_mrr': 0,
-        'new_mrr': 0,
-        'expansion_mrr': 0,
-        'contraction_mrr': 0,
-        'churn_mrr': 0,
-        'active_customers': 0,
-        'new_customers': 0,
-        'churned_customers': 0
-    })
-    
     # Sort events by date
     sorted_events = sorted(events, key=lambda x: x['event_date'])
     
@@ -51,57 +38,76 @@ def calculate_monthly_mrr(events):
     start_date = sorted_events[0]['event_date'].replace(day=1)
     end_date = sorted_events[-1]['event_date'].replace(day=1)
     
-    # Process events
-    for event in sorted_events:
-        customer_id = event['customer_id']
-        month_key = event['event_date'].strftime('%Y-%m')
-        
-        if event['event_type'] == 'new_subscription':
-            customer_state[customer_id] = event['mrr']
-            monthly_mrr[month_key]['new_mrr'] += event['mrr']
-            monthly_mrr[month_key]['new_customers'] += 1
-        
-        elif event['event_type'] == 'upgrade':
-            if customer_id in customer_state:
-                old_mrr = customer_state[customer_id]
-                expansion = event['mrr'] - old_mrr
-                monthly_mrr[month_key]['expansion_mrr'] += expansion
-                customer_state[customer_id] = event['mrr']
-        
-        elif event['event_type'] == 'downgrade':
-            if customer_id in customer_state:
-                old_mrr = customer_state[customer_id]
-                contraction = old_mrr - event['mrr']
-                monthly_mrr[month_key]['contraction_mrr'] += contraction
-                customer_state[customer_id] = event['mrr']
-        
-        elif event['event_type'] == 'churn':
-            if customer_id in customer_state:
-                monthly_mrr[month_key]['churn_mrr'] += customer_state[customer_id]
-                monthly_mrr[month_key]['churned_customers'] += 1
-                del customer_state[customer_id]
+    # Track customer state and monthly metrics
+    customer_state = {}  # Current MRR per customer
+    monthly_mrr = defaultdict(lambda: {
+        'new_mrr': 0,
+        'expansion_mrr': 0,
+        'contraction_mrr': 0,
+        'churn_mrr': 0,
+        'new_customers': 0,
+        'churned_customers': 0
+    })
     
-    # Calculate total MRR and active customers for each month
+    # Process events month by month
     current_date = start_date
     results = []
-    running_mrr = 0
+    event_idx = 0
     
     while current_date <= end_date:
         month_key = current_date.strftime('%Y-%m')
         month_data = monthly_mrr[month_key]
         
-        # Calculate net new MRR
+        # Process all events in this month
+        while event_idx < len(sorted_events):
+            event = sorted_events[event_idx]
+            event_month = event['event_date'].strftime('%Y-%m')
+            
+            if event_month != month_key:
+                break
+            
+            customer_id = event['customer_id']
+            
+            if event['event_type'] == 'new_subscription':
+                customer_state[customer_id] = event['mrr']
+                month_data['new_mrr'] += event['mrr']
+                month_data['new_customers'] += 1
+            
+            elif event['event_type'] == 'upgrade':
+                if customer_id in customer_state:
+                    old_mrr = customer_state[customer_id]
+                    expansion = event['mrr'] - old_mrr
+                    month_data['expansion_mrr'] += expansion
+                    customer_state[customer_id] = event['mrr']
+            
+            elif event['event_type'] == 'downgrade':
+                if customer_id in customer_state:
+                    old_mrr = customer_state[customer_id]
+                    contraction = old_mrr - event['mrr']
+                    month_data['contraction_mrr'] += contraction
+                    customer_state[customer_id] = event['mrr']
+            
+            elif event['event_type'] == 'churn':
+                if customer_id in customer_state:
+                    month_data['churn_mrr'] += customer_state[customer_id]
+                    month_data['churned_customers'] += 1
+                    del customer_state[customer_id]
+            
+            event_idx += 1
+        
+        # Calculate metrics for this month
         net_new = (month_data['new_mrr'] + 
                    month_data['expansion_mrr'] - 
                    month_data['contraction_mrr'] - 
                    month_data['churn_mrr'])
         
-        running_mrr += net_new
-        active_customers = len([c for c, mrr in customer_state.items() if mrr > 0])
+        # Calculate total MRR and active customers at end of month
+        total_mrr = sum(mrr for mrr in customer_state.values())
+        active_customers = sum(1 for mrr in customer_state.values() if mrr > 0)
         
         results.append({
             'month': month_key,
-            'total_mrr': round(running_mrr, 2),
+            'total_mrr': round(total_mrr, 2),
             'new_mrr': round(month_data['new_mrr'], 2),
             'expansion_mrr': round(month_data['expansion_mrr'], 2),
             'contraction_mrr': round(month_data['contraction_mrr'], 2),

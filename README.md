@@ -2,6 +2,8 @@
 
 A complete Monthly Recurring Revenue (MRR) analytics application with data generation, ETL pipeline, SQL analytics, and a React dashboard.
 
+![MRR Dashboard Screenshot](https://github.com/user-attachments/assets/3045ad8c-cb20-46bf-8f4e-0150db63fbdd)
+
 ## 📦 Project Structure
 
 ```
@@ -31,7 +33,7 @@ A complete Monthly Recurring Revenue (MRR) analytics application with data gener
 ### Prerequisites
 
 - Python 3.7 or higher
-- Node.js 18 or higher
+- Node.js 18.0.0 or 20.0.0+
 - npm or yarn
 
 ### Step 1: Generate Sample Data
