@@ -8,7 +8,6 @@ global_avg AS (
     AVG(monthly_amount / 100.0) AS avg_monthly_amount_usd
   FROM `static-rabbit-74213.stripe_mrr.subscriptions`
   WHERE monthly_amount > 0
-  -- AND status IN ('active', 'trialing') -- Only consider active and trialing subscriptions for average
 ),
 
 -- Generate a series of months based on subscription data
