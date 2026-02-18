@@ -1,16 +1,7 @@
 -- Calculate Monthly Recurring Revenue (MRR) from active subscriptions
--- MRR = Global average monthly amount × number of active subscriptions per month
+-- MRR = Monthly average revenue per subscription × number of active subscriptions per month
 
 WITH 
--- Calculate global average monthly amount across all subscriptions
-global_avg AS (
-  SELECT
-    AVG(monthly_amount / 100.0) AS avg_monthly_amount_usd
-  FROM `static-rabbit-74213.stripe_mrr.subscriptions`
-  WHERE monthly_amount > 0
-  -- AND status IN ('active', 'trialing') -- Only consider active and trialing subscriptions for average
-),
-
 -- Generate a series of months based on subscription data
 month_series AS (
   SELECT DISTINCT
@@ -22,11 +13,12 @@ month_series AS (
   FROM `static-rabbit-74213.stripe_mrr.subscriptions`
 ),
 
--- For each month, find subscriptions that were active
+-- For each month, find subscriptions that were active with their monthly amounts
 active_subscriptions AS (
   SELECT
     m.month,
-    s.subscription_id
+    s.subscription_id,
+    s.monthly_amount / 100.0 AS monthly_amount_usd
   FROM month_series m
   CROSS JOIN `static-rabbit-74213.stripe_mrr.subscriptions` s
   WHERE 
@@ -41,16 +33,15 @@ active_subscriptions AS (
     AND s.monthly_amount > 0
 ),
 
--- Calculate MRR per month: global avg × number of active subscriptions
+-- Calculate MRR per month: monthly avg × number of active subscriptions
 monthly_mrr AS (
   SELECT
-    a.month,
-    COUNT(DISTINCT a.subscription_id) AS active_subscriptions,
-    g.avg_monthly_amount_usd,
-    COUNT(DISTINCT a.subscription_id) * g.avg_monthly_amount_usd AS mrr_amount
-  FROM active_subscriptions a
-  CROSS JOIN global_avg g
-  GROUP BY a.month, g.avg_monthly_amount_usd
+    month,
+    COUNT(DISTINCT subscription_id) AS active_subscriptions,
+    AVG(monthly_amount_usd) AS avg_monthly_amount_usd,
+    COUNT(DISTINCT subscription_id) * AVG(monthly_amount_usd) AS mrr_amount
+  FROM active_subscriptions
+  GROUP BY month
 )
 
 SELECT
