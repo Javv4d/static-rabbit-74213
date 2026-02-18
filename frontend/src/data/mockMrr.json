@@ -1,30 +1,44 @@
 [
   {
     "month": "2025-08",
+    "active_subscriptions": 8,
+    "avg_monthly_amount_usd": 33.0,
     "mrr_amount": 264.0
   },
   {
     "month": "2025-09",
+    "active_subscriptions": 15,
+    "avg_monthly_amount_usd": 33.0,
     "mrr_amount": 495.0
   },
   {
     "month": "2025-10",
+    "active_subscriptions": 20,
+    "avg_monthly_amount_usd": 33.0,
     "mrr_amount": 660.0
   },
   {
     "month": "2025-11",
+    "active_subscriptions": 33,
+    "avg_monthly_amount_usd": 33.0,
     "mrr_amount": 1089.0
   },
   {
     "month": "2025-12",
+    "active_subscriptions": 37,
+    "avg_monthly_amount_usd": 33.0,
     "mrr_amount": 1221.0
   },
   {
     "month": "2026-01",
+    "active_subscriptions": 51,
+    "avg_monthly_amount_usd": 33.0,
     "mrr_amount": 1683.0
   },
   {
     "month": "2026-02",
+    "active_subscriptions": 48,
+    "avg_monthly_amount_usd": 33.0,
     "mrr_amount": 1584.0
   }
 ]

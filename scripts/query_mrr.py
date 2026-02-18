@@ -27,6 +27,8 @@ mrr_data = []
 for row in results:
     mrr_data.append({
         "month": row.month,
+        "active_subscriptions": int(row.active_subscriptions),
+        "avg_monthly_amount_usd": float(row.avg_monthly_amount_usd),
         "mrr_amount": float(row.mrr_amount)
     })
 

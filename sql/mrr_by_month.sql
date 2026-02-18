@@ -8,6 +8,7 @@ global_avg AS (
     AVG(monthly_amount / 100.0) AS avg_monthly_amount_usd
   FROM `static-rabbit-74213.stripe_mrr.subscriptions`
   WHERE monthly_amount > 0
+  -- AND status IN ('active', 'trialing') -- Only consider active and trialing subscriptions for average
 ),
 
 -- Generate a series of months based on subscription data
@@ -31,10 +32,10 @@ active_subscriptions AS (
   WHERE 
     -- Subscription was created before or during this month
     DATE(s.created) <= LAST_DAY(m.month)
-    -- AND subscription was still active (not canceled yet, or canceled after this month)
+    -- AND subscription was still active (not canceled yet, or canceled after this month started)
     AND (
       s.canceled_at IS NULL 
-      OR DATE(s.canceled_at) >= m.month
+      OR DATE(s.canceled_at) >= (m.month)
     )
     -- Only include subscriptions with actual monthly amounts
     AND s.monthly_amount > 0
@@ -54,6 +55,8 @@ monthly_mrr AS (
 
 SELECT
   FORMAT_DATE('%Y-%m', month) AS month,
+  active_subscriptions,
+  ROUND(avg_monthly_amount_usd, 2) AS avg_monthly_amount_usd,
   ROUND(mrr_amount, 2) AS mrr_amount
 FROM monthly_mrr
 ORDER BY month;
