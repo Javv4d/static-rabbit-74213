@@ -1,30 +1,30 @@
 [
   {
     "month": "2025-08",
-    "mrr_amount": 165.0
+    "mrr_amount": 264.0
   },
   {
     "month": "2025-09",
-    "mrr_amount": 429.0
+    "mrr_amount": 495.0
   },
   {
     "month": "2025-10",
-    "mrr_amount": 594.0
+    "mrr_amount": 660.0
   },
   {
     "month": "2025-11",
-    "mrr_amount": 825.0
+    "mrr_amount": 1089.0
   },
   {
     "month": "2025-12",
-    "mrr_amount": 1023.0
+    "mrr_amount": 1221.0
   },
   {
     "month": "2026-01",
-    "mrr_amount": 1485.0
+    "mrr_amount": 1683.0
   },
   {
     "month": "2026-02",
-    "mrr_amount": 1386.0
+    "mrr_amount": 1584.0
   }
 ]

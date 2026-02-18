@@ -25,9 +25,7 @@ month_series AS (
 active_subscriptions AS (
   SELECT
     m.month,
-    s.subscription_id,
-    s.customer_id,
-    s.status
+    s.subscription_id
   FROM month_series m
   CROSS JOIN `static-rabbit-74213.stripe_mrr.subscriptions` s
   WHERE 
@@ -36,7 +34,7 @@ active_subscriptions AS (
     -- AND subscription was still active (not canceled yet, or canceled after this month)
     AND (
       s.canceled_at IS NULL 
-      OR DATE(s.canceled_at) > LAST_DAY(m.month)
+      OR DATE(s.canceled_at) >= m.month
     )
     -- Only include subscriptions with actual monthly amounts
     AND s.monthly_amount > 0
@@ -56,8 +54,6 @@ monthly_mrr AS (
 
 SELECT
   FORMAT_DATE('%Y-%m', month) AS month,
-  active_subscriptions,
-  ROUND(avg_monthly_amount_usd, 2) AS avg_monthly_amount,
   ROUND(mrr_amount, 2) AS mrr_amount
 FROM monthly_mrr
 ORDER BY month;
